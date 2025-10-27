@@ -4,6 +4,8 @@ import Header from "../../components/Header"
 import Footer from "../../components/Footer"
 import { eventService } from '../../services/eventService';
 import { formatDate } from '../../utils/formatDate';
+import {deriveEventStatus} from '../../utils/getEventStatus';
+import Loading from '../../components/Loading';
 
 
 export default function EventsPage() {
@@ -62,6 +64,24 @@ export default function EventsPage() {
   return (
     <>
       <Header />
+
+      {/* Full-page loading overlay */}
+      {loading && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(255,255,255,0.75)',
+            zIndex: 2000,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Loading size={80} />
+        </div>
+      )}
+
       <div className="container-xl py-4">
         <div className="mx-auto" style={{ maxWidth: 900 }}>
           {/* Thanh tìm + lọc status */}
@@ -100,7 +120,6 @@ export default function EventsPage() {
         <div className="border rounded-3 p-3 p-sm-4" style={{ borderColor: '#fca5a5' }}>
           <div className="text-danger fw-bold mb-3 mb-sm-4" style={{ fontSize: 20 }}>Tất cả sự kiện</div>
 
-          {loading && <div className="text-center py-4">Đang tải...</div>}
           {error && <div className="text-danger mb-3">{error}</div>}
 
           <div className="row row-cols-1 row-cols-md-3 g-3">

@@ -1,26 +1,27 @@
-import * as React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import ProtectedRoute from './components/ProtectedRoute';
-import { NotificationsProvider } from './contexts/NotificationsContext';
+import * as React from "react";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { NotificationsProvider } from "./contexts/NotificationsContext";
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 // Public Pages
-import LandingPage from './pages/Public/LandingPage';
-import AboutUs from './pages/Public/AboutUs';
-import Events from './pages/Public/Events';
-import PublicEventDetail from './pages/Public/EventDetail';
-import Clubs from './pages/Public/Clubs';
-import Policy from './pages/Public/Policy';
-import Contact from './pages/Public/Contact';
+import LandingPage from "./pages/Public/LandingPage";
+import AboutUs from "./pages/Public/AboutUs";
+import Events from "./pages/Public/Events";
+import PublicEventDetail from "./pages/Public/EventDetail";
+import Clubs from "./pages/Public/Clubs";
+import Policy from "./pages/Public/Policy";
+import Contact from "./pages/Public/Contact";
 
 // Authentication Pages
-import Login from './pages/Auth/Login';
-import Signup from './pages/Auth/Signup';
-import RegisterComplete from './pages/Auth/RegisterComplete';
-import ForgotPassword from './pages/Auth/ForgotPassword';
-import ResetPassword from './pages/Auth/ResetPassword';
-import EmailConfirmation from './pages/Auth/EmailConfirmation';
+import Login from "./pages/Auth/Login";
+import Signup from "./pages/Auth/Signup";
+import RegisterComplete from "./pages/Auth/RegisterComplete";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
+import EmailConfirmation from "./pages/Auth/EmailConfirmation";
 
-// User Dashboard Pages
+// User Pages
 import UserLandingPage from './pages/User/UserLandingPage';
 import HoOCLandingPage from './pages/HoOC/HoOCLandingPage';
 import HoOCEventDetail from './pages/HoOC/HoOCEventDetail';
@@ -37,26 +38,36 @@ import Menber from './pages/User/Menber';
 import Risk from './pages/User/Risk';
 import Task from './pages/User/Task';
 import Notifications from './pages/User/Notifications';
+import HomePage from "./pages/User/HomePage";
 
 // Member Pages
 import MemberLandingPage from './pages/Member/MemberLandingPage';
 import MemberEventDetail from './pages/Member/MemberEventDetail';
 
 // Error Pages
-import ErrorPage404 from './pages/Errors/ErrorPage404'; 
-import ErrorPage403 from './pages/Errors/ErrorPage403';
-import ErrorPage401 from './pages/Errors/ErrorPage401';
-import ErrorPage502 from './pages/Errors/ErrorPage502';
-import ErrorPageOffline from './pages/Errors/ErrorPageOffline';
+import ErrorPage404 from "./pages/Errors/ErrorPage404";
+import ErrorPage403 from "./pages/Errors/ErrorPage403";
+import ErrorPage401 from "./pages/Errors/ErrorPage401";
+import ErrorPage502 from "./pages/Errors/ErrorPage502";
+import ErrorPageOffline from "./pages/Errors/ErrorPageOffline";
+import { ToastContainer } from "react-toastify";
+import HoDLandingPage from "./pages/HoD/HoDLandingPage";
+import HoOCDashBoard from "./pages/HoOC/HoOCDashBoard";
+
 
 export default function App() {
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  
   return (
-    <BrowserRouter>
-      <NotificationsProvider>
-      <Routes>
+    <GoogleOAuthProvider clientId={googleClientId}>
+      <BrowserRouter>
+        <ToastContainer position="top-right" autoClose={3000} />
+        <NotificationsProvider>
+        
+        <Routes>
           {/* Default Route */}
           <Route path="/" element={<Navigate to="/landingpage" replace />} />
-          
+
           {/* Public Routes */}
           <Route path="/landingpage" element={<LandingPage />} />
           <Route path="/about" element={<AboutUs />} />
@@ -65,7 +76,7 @@ export default function App() {
           <Route path="/clubs" element={<Clubs />} />
           <Route path="/policy" element={<Policy />} />
           <Route path="/contact" element={<Contact />} />
-          
+
           {/* Authentication Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
@@ -73,7 +84,7 @@ export default function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/email-confirmation" element={<EmailConfirmation />} />
-          
+
           {/* Protected User Routes */}
           <Route 
             path="/user-landing-page" 
@@ -92,10 +103,26 @@ export default function App() {
             } 
           />
           <Route 
+            path="/hod-landing-page" 
+            element={
+              <ProtectedRoute>
+                <HoDLandingPage />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
             path="/hooc-event-detail/:eventId" 
             element={
               <ProtectedRoute >
                 <HoOCEventDetail />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/hooc-dashboard" 
+            element={
+              <ProtectedRoute >
+                <HoOCDashBoard />
               </ProtectedRoute>
             } 
           />
@@ -228,42 +255,53 @@ export default function App() {
               </ProtectedRoute>
             } 
           />
-          
-          {/* Admin Routes */}
           <Route 
-            path="/admin" 
+            path="/home-page" 
             element={
-              <ProtectedRoute requiredRole="admin">
-                <div>Admin Page (Replace with your component)</div>
+              <ProtectedRoute requiredRole="user">
+                < HomePage />
               </ProtectedRoute>
             } 
           />
           
-          {/* Error Routes */}
-          <Route path="/403" element={<ErrorPage403 />} /> 
-          <Route path="/401" element={<ErrorPage401 />} /> 
-          <Route path="/502" element={<ErrorPage502 />} /> 
-          <Route path="/off" element={<ErrorPageOffline />} /> 
-          <Route 
-            path="/unauthorized" 
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
             element={
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                alignItems: 'center', 
-                height: '100vh',
-                flexDirection: 'column'
-              }}>
+              <ProtectedRoute requiredRole="admin">
+                <div>Admin Page (Replace with your component)</div>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Error Routes */}
+          <Route path="/403" element={<ErrorPage403 />} />
+          <Route path="/401" element={<ErrorPage401 />} />
+          <Route path="/502" element={<ErrorPage502 />} />
+          <Route path="/off" element={<ErrorPageOffline />} />
+          <Route
+            path="/unauthorized"
+            element={
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100vh",
+                  flexDirection: "column",
+                }}
+              >
                 <h1>403 - Unauthorized</h1>
                 <p>You don't have permission to access this page.</p>
               </div>
-            } 
+            }
           />
-          
+
           {/* 404 Route - Must be last */}
-          <Route path="*" element={<ErrorPage404 />} /> 
-      </Routes>
-      </NotificationsProvider>
-    </BrowserRouter>
+          <Route path="*" element={<ErrorPage404 />} />
+        </Routes>
+        </NotificationsProvider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }
