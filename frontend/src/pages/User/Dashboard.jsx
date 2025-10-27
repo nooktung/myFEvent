@@ -1,7 +1,7 @@
 import UserLayout from '../../components/UserLayout';
 import { useMemo } from 'react';
 
-export default function SoLieuDashboard() {
+export default function Dashboard() {
   const upcoming = useMemo(() => ([
     { name: 'Chuẩn bị sân khấu', left: 'Còn 3 ngày' },
     { name: 'Kiểm tra âm thanh', left: 'Còn 2 ngày' },

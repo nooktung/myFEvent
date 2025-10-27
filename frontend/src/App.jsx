@@ -234,7 +234,7 @@ export default function App() {
           <Route 
             path="/risk" 
             element={
-              <ProtectedRoute requiredRole="user">
+              <ProtectedRoute >
                 <Risk />
               </ProtectedRoute>
             } 
@@ -242,7 +242,7 @@ export default function App() {
           <Route 
             path="/task" 
             element={
-              <ProtectedRoute requiredRole="user">
+              <ProtectedRoute >
                 <Task />
               </ProtectedRoute>
             } 
