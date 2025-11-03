@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import UserLayout from '../../components/UserLayout';
 import { eventApi } from '../../apis/eventApi';
+import AIAssistantButton from '../../components/chat/AIAssistantButton.jsx';
+import AIAssistantModal from '../../components/chat/AIAssistantModal.jsx';
 
 export default function HoOCEventDetail() {
   const { eventId } = useParams();
@@ -23,6 +25,7 @@ export default function HoOCEventDetail() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [aiOpen, setAiOpen] = useState(false);
 
   // Check if user is HoOC
   const isHoOC = user?.role === 'HoOC';
@@ -393,6 +396,10 @@ export default function HoOCEventDetail() {
           </div>
         </div>
       )}
+
+      {/* AI Assistant UI */}
+      <AIAssistantButton onClick={() => setAiOpen(true)} />
+      <AIAssistantModal isOpen={aiOpen} onClose={() => setAiOpen(false)} />
     </UserLayout>
   );
 }
