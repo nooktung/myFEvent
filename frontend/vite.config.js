@@ -11,16 +11,5 @@ export default defineConfig({
     alias: [
       { find: '~', replacement: '/src' },
     ]
-  },
-  server: {
-    proxy: {
-      // Proxy AI API to avoid CORS in development
-      '/ai': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        secure: false,
-        rewrite: (path) => path.replace(/^\/ai/, ''),
-      },
-    },
   }
 })
